@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusMate - Chitwan College of Technology (CCT)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cctBlue: '#16528c',
+                        cctOrange: '#f28c18',
+                        lightBlue: '#5AAED6',
+                        deepBlue: '#16528c',
+                        softBlue: '#E8F5FA',
+                        creamWhite: '#FFFAF0',
+                        surface: '#FFFDF7',
+                        customBg: '#F4F8F7'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-full flex flex-col md:flex-row overflow-hidden bg-customBg">
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <div id="search-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-start justify-center pt-20 px-4">
+        <div class="bg-surface w-full max-w-2xl rounded-2xl shadow-2xl border border-lightBlue/30 overflow-hidden animate-fade-in">
+            <div class="p-4 border-b border-gray-100 flex items-center gap-3">
+                <i data-lucide="search" class="w-5 h-5 text-cctBlue"></i>
+                <input type="text" id="global-search-input" placeholder="Search CCT assignments, notices, lost & found, locations..." class="w-full bg-transparent text-gray-800 focus:outline-none text-base">
+                <span class="text-xs bg-softBlue text-cctBlue px-2 py-1 rounded font-medium">ESC</span>
+            </div>
+            <div id="search-results" class="max-h-96 overflow-y-auto p-4 space-y-2">
+                <p class="text-sm text-gray-400 text-center py-6">Type to search across all CCT campus modules...</p>
+            </div>
+        </div>
+    </div>
+
+    <aside id="sidebar" class="w-full md:w-72 bg-surface border-r border-lightBlue/20 flex flex-col z-20 transition-all duration-300">
+        <div class="p-5 flex items-center justify-between border-b border-lightBlue/20">
+            <div class="flex items-center gap-3">
+                <!-- CCT Logo SVG Recreation matching the uploaded monogram & color theme -->
+                <div class="flex items-center gap-2">
+                    <svg class="w-9 h-9" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <text x="5" y="72" font-family="Inter, sans-serif" font-weight="800" font-size="64" fill="#16528c">C</text>
+                        <text x="45" y="72" font-family="Inter, sans-serif" font-weight="800" font-size="64" fill="#16528c">C</text>
+                        <rect x="75" y="24" width="20" height="20" rx="3" fill="#f28c18"/>
+                    </svg>
+                    <div>
+                        <div class="flex items-center gap-1">
+                            <span class="font-extrabold text-lg text-cctBlue leading-none">CCT</span>
+                            <span class="text-xs font-bold px-1.5 py-0.5 rounded bg-cctOrange/15 text-cctOrange">Mate</span>
+                        </div>
+                        <p class="text-[10px] text-gray-500 font-medium">Chitwan College of Technology</p>
+                    </div>
+                </div>
+            </div>
+            <button id="mobile-close" class="md:hidden text-gray-500 hover:text-cctBlue">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1.5">
+            <button onclick="router.navigate('dashboard')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="dashboard">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+            </button>
+            <button onclick="router.navigate('planner')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="planner">
+                <i data-lucide="calendar-check" class="w-5 h-5"></i> Smart Planner
+            </button>
+            <button onclick="router.navigate('assignments')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="assignments">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Assignments
+            </button>
+            <button onclick="router.navigate('notices')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="notices">
+                <i data-lucide="bell" class="w-5 h-5"></i> CCT Notices
+            </button>
+            <button onclick="router.navigate('lostfound')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="lostfound">
+                <i data-lucide="package-search" class="w-5 h-5"></i> Lost & Found
+            </button>
+            <button onclick="router.navigate('finder')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="finder">
+                <i data-lucide="map-pin" class="w-5 h-5"></i> Campus Finder
+            </button>
+            <button onclick="router.navigate('cafeteria')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="cafeteria">
+                <i data-lucide="utensils" class="w-5 h-5"></i> Canteen Menu
+            </button>
+            <button onclick="router.navigate('ai')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="ai">
+                <i data-lucide="bot" class="w-5 h-5"></i> CCT Assistant AI
+            </button>
+            <button onclick="router.navigate('help')" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all text-gray-700 hover:bg-softBlue hover:text-cctBlue" data-route="help">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i> Emergency SOS
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-lightBlue/20">
+            <button onclick="router.navigate('profile')" class="nav-btn w-full flex items-center gap-3 p-2 rounded-xl bg-softBlue/60 hover:bg-softBlue transition-all text-cctBlue font-medium text-sm" data-route="profile">
+                <img id="sidebar-avatar" src="https://placehold.co/40x40/16528c/FFFAF0?text=S" class="w-9 h-9 rounded-full object-cover border border-lightBlue" alt="Profile">
+                <div class="text-left truncate">
+                    <p id="sidebar-username" class="font-semibold text-xs truncate">Student Name</p>
+                    <p class="text-[10px] text-gray-500">CCT Student Profile</p>
+                </div>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <!-- Top Header Bar -->
+        <header class="bg-surface border-b border-lightBlue/20 px-6 py-3.5 flex items-center justify-between shrink-0 z-10">
+            <div class="flex items-center gap-4">
+                <button id="mobile-toggle" class="md:hidden text-gray-600 hover:text-cctBlue">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div class="hidden sm:flex items-center bg-softBlue/60 border border-lightBlue/30 rounded-xl px-3.5 py-2 w-80 text-sm text-gray-500 cursor-pointer hover:border-cctBlue transition-all shadow-sm" onclick="openSearchModal()">
+                    <i data-lucide="search" class="w-4 h-4 mr-2 text-cctBlue"></i>
+                    <span>Search CCT portal...</span>
+                    <span class="ml-auto text-xs bg-surface border border-lightBlue/40 px-1.5 py-0.5 rounded text-cctBlue font-mono">Ctrl+K</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Notifications Dropdown Container -->
+                <div class="relative">
+                    <button onclick="toggleNotifications()" class="relative p-2.5 rounded-xl bg-softBlue/60 hover:bg-softBlue text-cctBlue transition-all">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span id="notification-badge" class="absolute top-1.5 right-1.5 w-2 h-2 bg-cctOrange rounded-full hidden"></span>
+                    </button>
+                    <div id="notifications-dropdown" class="absolute right-0 mt-2 w-80 bg-surface rounded-2xl shadow-2xl border border-lightBlue/30 hidden z-50 overflow-hidden animate-fade-in">
+                        <div class="p-3.5 border-b border-lightBlue/20 flex items-center justify-between bg-softBlue/30">
+                            <h3 class="font-semibold text-sm text-cctBlue">CCT Notifications</h3>
+                            <button onclick="clearNotifications()" class="text-xs text-gray-500 hover:text-cctBlue font-medium">Clear All</button>
+                        </div>
+                        <div id="notifications-list" class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+                            <p class="text-xs text-gray-400 text-center py-4">No new notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-6 w-px bg-lightBlue/30"></div>
+
+                <div class="flex items-center gap-2">
+                    <span id="header-greeting" class="text-sm font-semibold text-cctBlue hidden sm:inline">Welcome to CCT</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div id="app-view" class="flex-1 overflow-y-auto p-4 md:p-8 bg-customBg">
+            <!-- Rendered views injected here -->
+        </div>
+    </main>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
